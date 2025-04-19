@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AYMACOF ERP - Système de Gestion Logistique</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css">
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.1/moment.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <nav class="top-nav">
+            <div class="logo">
+                <i class="fas fa-globe"></i>
+                <div class="logo-text">
+                    <span class="main-title">AYMACOF ERP</span>
+                    <span class="sub-title">ⵃⵄⵍⵍⵓ</span>
+                </div>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="active" data-tooltip="Tableau de Bord"><i class="fas fa-home"></i> Accueil</a>
+                <a href="#" data-tooltip="Configuration Système"><i class="fas fa-cog"></i> Paramètres</a>
+                <a href="#" data-tooltip="Centre de Notifications" class="notification-link">
+                    <i class="fas fa-bell"></i> Notifications 
+                    <span class="badge pulse">3</span>
+                </a>
+                <a href="#" data-tooltip="Gestion du Profil"><i class="fas fa-user"></i> Profil</a>
+            </div>
+            <div class="theme-toggle" data-tooltip="Changer le Thème">
+                <i class="fas fa-moon"></i>
+            </div>
+        </nav>
+
+        <div class="dashboard-header">
+            <div class="header-content">
+                <div class="title-section">
+                    <h1><i class="fas fa-industry"></i> Système de Gestion Logistique</h1>
+                    <p class="subtitle">Suivi en temps réel de la chaîne logistique Paris-Fez</p>
+                </div>
+                <div class="search-section">
+                    <div class="search-bar">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Rechercher une expédition..." id="searchInput">
+                    </div>
+                </div>
+            </div>
+            <div class="quick-stats">
+                <div class="stat-card" data-tooltip="Détails des Expéditions Actives">
+                    <div class="stat-icon">
+                        <i class="fas fa-truck-moving"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span>Expéditions Actives</span>
+                        <h3>12</h3>
+                        <div class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+3 aujourd'hui</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card" data-tooltip="Analyse des Retards">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span>Retards</span>
+                        <h3>3</h3>
+                        <div class="stat-trend negative">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>-2 vs hier</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card" data-tooltip="Performance des Livraisons">
+                    <div class="stat-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span>Livraisons à l'Heure</span>
+                        <h3>45</h3>
+                        <div class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>92% taux</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-card" data-tooltip="Efficacité Opérationnelle">
+                    <div class="stat-icon info">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span>Efficacité</span>
+                        <h3>87%</h3>
+                        <div class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+5% ce mois</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="visualization">Visualisation</button>
+            <button class="tab-btn" data-tab="gps">Suivi GPS</button>
+            <button class="tab-btn" data-tab="data-entry">Saisie de Données</button>
+            <button class="tab-btn" data-tab="analytics">Analyses</button>
+            <button class="tab-btn" data-tab="tms">Système de Gestion des Transports</button>
+            <button class="tab-btn" data-tab="alerts">Centre d'Alertes</button>
+            <button class="tab-btn" data-tab="delay-solutions">Solutions Retards</button>
+        </div>
+
+        <div id="visualization" class="tab-content active">
+            <div class="supply-chain">
+                <div class="step" id="paris">
+                    <i class="fas fa-building"></i>
+                    <h3>Paris</h3>
+                    <p>Fournisseur</p>
+                    <p>Temps: <span class="time-display">2</span> jours</p>
+                    <div class="incoterms">
+                        <p>Incoterms:</p>
+                        <ul>
+                            <li>EXW (Ex Works)</li>
+                            <li>FCA (Free Carrier)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step" id="transport1">
+                    <i class="fas fa-truck"></i>
+                    <h3>Transport Terrestre</h3>
+                    <p>Paris → Algésiras</p>
+                    <p>Durée: <span class="time-display">3</span> jours</p>
+                    <div class="incoterms">
+                        <p>Incoterms:</p>
+                        <ul>
+                            <li>CPT (Carriage Paid To)</li>
+                            <li>CIP (Carriage and Insurance Paid)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step" id="algeciras">
+                    <i class="fas fa-anchor"></i>
+                    <h3>Algésiras</h3>
+                    <p>Port Espagnol</p>
+                    <p>Temps: <span class="time-display">2</span> jours</p>
+                    <div class="incoterms">
+                        <p>Incoterms:</p>
+                        <ul>
+                            <li>FAS (Free Alongside Ship)</li>
+                            <li>FOB (Free On Board)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step" id="transport2">
+                    <i class="fas fa-ship"></i>
+                    <h3>Transport Maritime</h3>
+                    <p>Algésiras → Tanger Med</p>
+                    <p>Durée: <span class="time-display">1</span> jour</p>
+                    <div class="incoterms">
+                        <p>Incoterms:</p>
+                        <ul>
+                            <li>CFR (Cost and Freight)</li>
+                            <li>CIF (Cost, Insurance and Freight)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step" id="tanger">
+                    <i class="fas fa-anchor"></i>
+                    <h3>Tanger Med</h3>
+                    <p>Port Marocain</p>
+                    <p>Temps: <span class="time-display">2</span> jours</p>
+                    <div class="incoterms">
+                        <p>Incoterms:</p>
+                        <ul>
+                            <li>DAP (Delivered At Place)</li>
+                            <li>DPU (Delivered at Place Unloaded)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step" id="transport3">
+                    <i class="fas fa-truck"></i>
+                    <h3>Transport Terrestre</h3>
+                    <p>Tanger Med → Fès</p>
+                    <p>Durée: <span class="time-display">1</span> jour</p>
+                    <div class="incoterms">
+                        <p>Incoterms:</p>
+                        <ul>
+                            <li>DAP (Delivered At Place)</li>
+                            <li>DDP (Delivered Duty Paid)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="arrow">→</div>
+                <div class="step" id="fes">
+                    <i class="fas fa-industry"></i>
+                    <h3>Fès</h3>
+                    <p>Usine</p>
+                    <p>Temps: <span class="time-display">1</span> jour</p>
+                    <div class="incoterms">
+                        <p>Incoterms:</p>
+                        <ul>
+                            <li>DDP (Delivered Duty Paid)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="data-entry" class="tab-content">
+            <h2><i class="fas fa-edit"></i> Saisie des Données</h2>
+            <form id="supply-chain-form">
+                <div class="form-group">
+                    <h3>Paris - Fournisseur</h3>
+                    <label>Temps de traitement (jours):</label>
+                    <input type="number" name="paris-time" min="0" value="2">
+                    <label>Date de départ:</label>
+                    <input type="date" name="paris-date">
+                    <label>Coût (€):</label>
+                    <input type="number" name="paris-cost" min="0">
+                </div>
+
+                <div class="form-group">
+                    <h3>Transport Paris → Algésiras</h3>
+                    <label>Durée (jours):</label>
+                    <input type="number" name="transport1-time" min="0" value="3">
+                    <label>Coût du transport (€):</label>
+                    <input type="number" name="transport1-cost" min="0">
+                    <label>Transporteur:</label>
+                    <input type="text" name="transport1-carrier">
+                </div>
+
+                <!-- Similar form groups for other steps -->
+
+                <button type="submit" class="submit-btn">Enregistrer les Données</button>
+            </form>
+        </div>
+
+        <div id="gps" class="tab-content">
+            <h2><i class="fas fa-satellite"></i> Suivi GPS</h2>
+            <div class="tracking-container">
+                <div id="map" style="height: 500px;"></div>
+                <div class="vehicle-list">
+                    <h3>Véhicules</h3>
+                    <div class="vehicle-item">
+                        <i class="fas fa-truck"></i>
+                        <div class="vehicle-info">
+                            <span class="vehicle-name">Camion 001</span>
+                            <span class="vehicle-status">En transit</span>
+                        </div>
+                    </div>
+                    <div class="vehicle-item">
+                        <i class="fas fa-ship"></i>
+                        <div class="vehicle-info">
+                            <span class="vehicle-name">Navire Med Star</span>
+                            <span class="vehicle-status">En port</span>
+                        </div>
+                    </div>
+                    <div class="vehicle-item">
+                        <i class="fas fa-truck"></i>
+                        <div class="vehicle-info">
+                            <span class="vehicle-name">Camion 002</span>
+                            <span class="vehicle-status active">En attente</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="analytics" class="tab-content">
+            <h2><i class="fas fa-chart-line"></i> Analyses</h2>
+            
+            <div class="analytics-dashboard">
+                <div class="analytics-sidebar">
+                    <div class="date-filter">
+                        <h3><i class="fas fa-calendar"></i> Période d'Analyse</h3>
+                        <select id="timeRange">
+                            <option value="today">Aujourd'hui</option>
+                            <option value="week">Cette Semaine</option>
+                            <option value="month">Ce Mois</option>
+                            <option value="quarter">Ce Trimestre</option>
+                            <option value="year">Cette Année</option>
+                        </select>
+                    </div>
+
+                    <div class="kpi-cards">
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <i class="fas fa-clock"></i>
+                                <span>Délai Moyen</span>
+                            </div>
+                            <div class="kpi-value">18.5h</div>
+                            <div class="kpi-trend positive">↑ 2.3%</div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Taux de Livraison à l'Heure</span>
+                            </div>
+                            <div class="kpi-value">92%</div>
+                            <div class="kpi-trend positive">↑ 5%</div>
+                        </div>
+
+                        <div class="kpi-card">
+                            <div class="kpi-header">
+                                <i class="fas fa-euro-sign"></i>
+                                <span>Coût par Kilomètre</span>
+                            </div>
+                            <div class="kpi-value">2.15€</div>
+                            <div class="kpi-trend negative">↓ 1.2%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="chart-row">
+                        <div class="chart">
+                            <h3>Performance Temporelle</h3>
+                            <canvas id="timePerformanceChart"></canvas>
+                        </div>
+                        <div class="chart">
+                            <h3>Analyse des Coûts</h3>
+                            <canvas id="costAnalysisChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-row">
+                        <div class="chart">
+                            <h3>Efficacité par Route</h3>
+                            <canvas id="routeEfficiencyChart"></canvas>
+                        </div>
+                        <div class="chart">
+                            <h3>Prévisions de Retard</h3>
+                            <canvas id="delayPredictionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="analytics-insights">
+                    <h3><i class="fas fa-lightbulb"></i> Insights Automatiques</h3>
+                    <div class="insight-cards">
+                        <div class="insight-card positive">
+                            <h4>Point Fort</h4>
+                            <p>La route Paris-Algésiras montre une amélioration de 15% du temps de transit</p>
+                        </div>
+                        <div class="insight-card warning">
+                            <h4>Attention</h4>
+                            <p>Augmentation des retards de 8% pendant les périodes de pointe</p>
+                        </div>
+                        <div class="insight-card info">
+                            <h4>Suggestion</h4>
+                            <p>Optimisation possible des routes maritimes pour réduire les coûts de 12%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="delay-solutions" class="tab-content">
+            <h2><i class="fas fa-tools"></i> Solutions aux Retards</h2>
+            
+            <div class="delay-dashboard">
+                <div class="current-delays">
+                    <h3>Retards Actifs</h3>
+                    <div class="delay-list">
+                        <div class="delay-item critical">
+                            <div class="delay-header">
+                                <span class="delay-id">PAR-TNG-001</span>
+                                <span class="delay-time">Retard: 2h30</span>
+                            </div>
+                            <div class="delay-details">
+                                <p>Paris → Algésiras</p>
+                                <div class="solution-actions">
+                                    <button class="action-btn" onclick="applySolution('route-change')"><i class="fas fa-route"></i> Changer d'Itinéraire</button>
+                                    <button class="action-btn" onclick="applySolution('speed-up')"><i class="fas fa-fast-forward"></i> Accélérer</button>
+                                    <button class="action-btn" onclick="applySolution('notify')"><i class="fas fa-bell"></i> Notifier Client</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="delay-item warning">
+                            <div class="delay-header">
+                                <span class="delay-id">MED-234</span>
+                                <span class="delay-time">Retard Prévu: 1h15</span>
+                            </div>
+                            <div class="delay-details">
+                                <p>Algésiras → Tanger Med</p>
+                                <div class="solution-actions">
+                                    <button class="action-btn" onclick="applySolution('priority-dock')"><i class="fas fa-anchor"></i> Quai Prioritaire</button>
+                                    <button class="action-btn" onclick="applySolution('notify')"><i class="fas fa-bell"></i> Notifier Client</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="delay-prevention">
+                    <h3>Prévention des Retards</h3>
+                    <div class="prevention-tools">
+                        <div class="weather-forecast">
+                            <h4><i class="fas fa-cloud-sun"></i> Prévisions Météo</h4>
+                            <div class="weather-alerts">
+                                <div class="weather-alert warning">
+                                    <i class="fas fa-wind"></i>
+                                    <span>Vents forts prévus - Détroit de Gibraltar</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="traffic-prediction">
+                            <h4><i class="fas fa-traffic-light"></i> Prédictions Trafic</h4>
+                            <div class="traffic-timeline">
+                                <div class="timeline-hour green">8h</div>
+                                <div class="timeline-hour yellow">9h</div>
+                                <div class="timeline-hour red">10h</div>
+                                <div class="timeline-hour red">11h</div>
+                                <div class="timeline-hour yellow">12h</div>
+                            </div>
+                        </div>
+
+                        <div class="port-status">
+                            <h4><i class="fas fa-ship"></i> État des Ports</h4>
+                            <div class="port-indicators">
+                                <div class="port-indicator">
+                                    <span>Algésiras</span>
+                                    <div class="status-light green"></div>
+                                </div>
+                                <div class="port-indicator">
+                                    <span>Tanger Med</span>
+                                    <div class="status-light yellow"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ai-recommendations">
+                        <h4><i class="fas fa-robot"></i> Recommandations IA</h4>
+                        <div class="recommendation-list">
+                            <div class="recommendation-item">
+                                <i class="fas fa-clock"></i>
+                                <div class="recommendation-content">
+                                    <h5>Ajustement des Horaires</h5>
+                                    <p>Décaler les départs de Paris de 2h pour éviter les pics de trafic</p>
+                                    <button class="apply-btn" onclick="applyRecommendation('schedule-adjust')">Appliquer</button>
+                                </div>
+                            </div>
+                            <div class="recommendation-item">
+                                <i class="fas fa-route"></i>
+                                <div class="recommendation-content">
+                                    <h5>Route Alternative</h5>
+                                    <p>Utiliser la route côtière pour éviter les travaux prévus</p>
+                                    <button class="apply-btn" onclick="applyRecommendation('route-adjust')">Appliquer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tms" class="tab-content">
+            <h2><i class="fas fa-truck-moving"></i> Transport Management System</h2>
+            <div class="tms-container">
+                <div class="tms-section">
+                    <h3>Planification des Routes</h3>
+                    <div class="route-optimizer">
+                        <select id="routeOptimizationMode">
+                            <option value="fastest">Route la plus rapide</option>
+                            <option value="eco">Route écologique</option>
+                            <option value="balanced">Route équilibrée</option>
+                        </select>
+                        <button class="optimize-btn">Optimiser les Routes</button>
+                    </div>
+                </div>
+
+                <div class="tms-section">
+                    <h3>Gestion de Flotte</h3>
+                    <div class="fleet-status">
+                        <div class="vehicle-status available">
+                            <i class="fas fa-truck"></i>
+                            <span>Disponibles: 8</span>
+                        </div>
+                        <div class="vehicle-status in-transit">
+                            <i class="fas fa-route"></i>
+                            <span>En Transit: 12</span>
+                        </div>
+                        <div class="vehicle-status maintenance">
+                            <i class="fas fa-tools"></i>
+                            <span>En Maintenance: 2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tms-section">
+                    <h3>Documents de Transport</h3>
+                    <div class="document-generator">
+                        <button class="doc-btn"><i class="fas fa-file-pdf"></i> CMR</button>
+                        <button class="doc-btn"><i class="fas fa-file-invoice"></i> Facture</button>
+                        <button class="doc-btn"><i class="fas fa-file-contract"></i> Bon de Livraison</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="alerts" class="tab-content">
+            <h2><i class="fas fa-bell"></i> Centre d'Alertes</h2>
+            <div class="alerts-container">
+                <div class="alert-filters">
+                    <button class="filter-btn active">Tous</button>
+                    <button class="filter-btn">Retards</button>
+                    <button class="filter-btn">Maintenance</button>
+                    <button class="filter-btn">Documents</button>
+                </div>
+
+                <div class="alert-list">
+                    <div class="alert-item high">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <div class="alert-content">
+                            <h4>Retard Important</h4>
+                            <p>Navire MED-234 - Retard estimé: 2 heures</p>
+                            <span class="timestamp">Il y a 30 min</span>
+                        </div>
+                    </div>
+
+                    <div class="alert-item medium">
+                        <i class="fas fa-clock"></i>
+                        <div class="alert-content">
+                            <h4>Maintenance Planifiée</h4>
+                            <p>Camion PAR-TNG-002 - Maintenance prévue dans 2 jours</p>
+                            <span class="timestamp">Il y a 2 heures</span>
+                        </div>
+                    </div>
+
+                    <div class="alert-item low">
+                        <i class="fas fa-file-alt"></i>
+                        <div class="alert-content">
+                            <h4>Documents en Attente</h4>
+                            <p>CMR manquant pour l'expédition #TNG-2025-042</p>
+                            <span class="timestamp">Il y a 5 heures</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <script>
+        // Immediate initialization to ensure tabs work
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded - initializing');
+            
+            // Make all tab contents initially hidden except the first one
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.style.display = 'none';
+            });
+            document.getElementById('visualization').style.display = 'block';
+            
+            // Setup tab button click event handlers directly
+            document.querySelectorAll('.tab-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    console.log('Tab clicked:', this.getAttribute('data-tab'));
+                    
+                    // Hide all tabs
+                    document.querySelectorAll('.tab-content').forEach(tab => {
+                        tab.style.display = 'none';
+                    });
+                    
+                    // Deactivate all buttons
+                    document.querySelectorAll('.tab-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // Show the selected tab and activate button
+                    const tabName = this.getAttribute('data-tab');
+                    document.getElementById(tabName).style.display = 'block';
+                    this.classList.add('active');
+                });
+            });
+            
+            // Setup dark mode toggle
+            const themeToggle = document.querySelector('.theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', function() {
+                    console.log('Theme toggle clicked');
+                    const icon = this.querySelector('i');
+                    
+                    if (document.documentElement.getAttribute('data-theme') === 'dark') {
+                        // Switch to light mode
+                        document.documentElement.removeAttribute('data-theme');
+                        localStorage.setItem('theme', 'light');
+                        if (icon) {
+                            icon.classList.remove('fa-sun');
+                            icon.classList.add('fa-moon');
+                        }
+                    } else {
+                        // Switch to dark mode
+                        document.documentElement.setAttribute('data-theme', 'dark');
+                        localStorage.setItem('theme', 'dark');
+                        if (icon) {
+                            icon.classList.remove('fa-moon');
+                            icon.classList.add('fa-sun');
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
